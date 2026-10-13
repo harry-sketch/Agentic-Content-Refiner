@@ -1,14 +1,12 @@
-import { AIMessage } from "langchain";
 import type { TStateType } from "../types/types.ts";
+import { MAX_REVISONS } from "../utils/utils.ts";
 
 export const shouldContinue = (state: TStateType) => {
-  const lastMessage = state.messages[state.messages.length - 1];
+  const revisionCnt = state.revisionCnt;
 
-  const aiMsg = AIMessage.isInstance(lastMessage);
-
-  if (aiMsg && (lastMessage.tool_calls ?? "")?.length > 0) {
-    return "reflactor_node";
+  if (revisionCnt >= MAX_REVISONS) {
+    return "end";
   }
 
-  return "end";
+  return "reflactor_node";
 };
